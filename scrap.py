@@ -3,9 +3,10 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from bs4 import BeautifulSoup
 
 # profile url we want to visit
-URL = "https://x.com/nasa"
+URL = "https://x.com/yourclouddude/status/1973463347895861267"
 
 # set up and launch the chrome browser
 print("Launching browser....")
@@ -15,10 +16,19 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 print(f"Opening {URL}")
 driver.get(URL)
 
-# keep the script running so that the browserr doesn't shutdown
-print("Browser is open. Press enter in this terminal to close it")
-input()
+# waiting for the page to load
+time.sleep(5)
 
-# close the browser
+page_source = driver.page_source
+soup = BeautifulSoup(page_source, "html.parser")
+
+main_tweet = soup.find("article", attrs={"data-testid": "tweet"})
+
+if main_tweet:
+    tweet_text = main_tweet.get_text(strip=True)
+    print(tweet_text)
+else:
+    print("Could not find the main tweet on the page")
+
 driver.quit()
-print("Browser closed")
+print("Script end")
