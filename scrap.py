@@ -19,11 +19,14 @@ driver.get(URL)
 # waiting for the page to load
 time.sleep(5)
 
+# get page source and parse the unorganize code into html format
 page_source = driver.page_source
 soup = BeautifulSoup(page_source, "html.parser")
 
+# find the mainc tweet using a specific selector
 main_tweet = soup.find("article", attrs={"data-testid": "tweet"})
 
+# get the tweet content
 if main_tweet:
     tweet_text = main_tweet.get_text(strip=True)
     print(tweet_text)
